@@ -1,4 +1,4 @@
-const genreRepository = require('../database/repositories/genreRepository');
+const genreRepository = require('../database/repositories/genresRepository');
 
 const formatResult = (allMovies) => {
     return allMovies.reduce((acc, item) => {

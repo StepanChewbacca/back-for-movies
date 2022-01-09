@@ -10,6 +10,16 @@ const getGenreByName = async ({name}) => {
     }
 };
 
+const getGenres = async () => {
+    try {
+        const genres = await pgClient.query(`SELECT * FROM genres`);
+        return { result: genres.rows };
+    } catch (err) {
+        console.error('setGenresForMovies: ', err);
+        return { error: err };
+    }
+};
+
 const setGenres = async ({ id, name }) => {
     try {
         const result = await pgClient.query(`INSERT INTO genres(id,name) VALUES(${id},'${name}');`);
@@ -34,4 +44,4 @@ const getGenresById = async (movie_id) => {
 
 
 
-module.exports = { setGenres, getGenreByName,getGenresById };
+module.exports = { setGenres, getGenreByName,getGenresById, getGenres };

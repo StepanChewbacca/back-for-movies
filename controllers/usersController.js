@@ -6,14 +6,14 @@ const createUser = async (body) => {
     try {
         const { error, value } = await createUserValidate.validate(body);
         if (error) {
-            return { error: { status: 400, data: error.message } };
+            return { error: { status: 400, data: "error.message" } };
         }
         const hashPassword = await hash(value.password);
 
         const { error: dbError, result } = await usersRepository.createUser(value, hashPassword);
 
         if (dbError) return { error: { status: 500, data: dbError } };
-        return { result: { data: result, status: 201 } };
+        return { result: { data: "Registration successful", status: 201 } };
 
     } catch (err) {
         console.error(err);
