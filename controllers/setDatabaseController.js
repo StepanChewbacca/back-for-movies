@@ -1,6 +1,6 @@
 const axios = require('axios');
 const userController = require('../controllers/usersController');
-const genreRepository = require('../database/repositories/genreRepository');
+const genreRepository = require('../database/repositories/genresRepository');
 const moviesRepository = require('../database/repositories/moviesRepository');
 
 

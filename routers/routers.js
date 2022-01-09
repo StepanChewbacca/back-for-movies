@@ -3,13 +3,13 @@ const routes = require('../constants/routes');
 const userRepository = require('../controllers/usersController');
 const setDatabaseController = require('../controllers/setDatabaseController');
 const moviesController = require('../controllers/moviesController');
+const genresController = require('../controllers/genresController');
 
 
 
 const router = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
-        const movie_id = pathname.split('/').at(-1);
 
         switch (true) {
             case (req.method === 'POST' && pathname === routes.SIGN_UP):
@@ -25,8 +25,12 @@ const router = async ({ req, res, body }) => {
                 ({ error, result } = await moviesController.getMovies(query));
                 console.log(result)
                 break;
-            case (req.method === 'GET' && pathname === `${routes.MOVIES}/${movie_id}`):
-                ({ error, result } = await moviesController.getMovieById(movie_id));
+            case (req.method === 'GET' && pathname === `${routes.MOVIES}/id`):
+                ({ error, result } = await moviesController.getMovieById(query.id));
+                console.log(result)
+                break;
+            case (req.method === 'GET' && pathname === `${routes.GENRES}`):
+                ({ error, result } = await genresController.getGenres());
                 console.log(result)
                 break;
             default:

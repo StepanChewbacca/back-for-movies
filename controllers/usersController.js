@@ -6,7 +6,7 @@ const createUser = async (body) => {
     try {
         const { error, value } = await createUserValidate.validate(body);
         if (error) {
-            return { error: { status: 400, data: error.message } };
+            return { error: { status: 400, data: "error.message" } };
         }
         const hashPassword = await hash(value.password);
 
