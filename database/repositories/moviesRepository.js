@@ -80,13 +80,19 @@ const getMovieByImdbId = async ({imdb_id}) => {
     }
 };
 
-const getMovies = async ( {adult, page, perPage, budget, title, languages,
+const getMovies = async ( {adult, page, perPage, title, languages,
                              budget_min, budget_max, genre_id} ) => {
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
+        if (genre_id) {
+            pgQuery = `SELECT * FROM movies LEFT JOIN
+    movies_genres ON movies.id = movie_id `;
+            options.push(`genre_id = ${genre_id}`);
+        }
         if (adult) options.push(`movies.adult = ${adult}`);
-        if (budget) options.push(`movies.budget > ${budget_min} AND budget < ${budget_max}`);
+        if (budget_min) options.push(`movies.budget > ${budget_min}`);
+        if (budget_max) options.push(`movies.budget < ${budget_max}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (genre_id) options.push(`genre_id = ${genre_id}`);
         if (languages) options.push(`movies.original_language = '${languages}'`);
