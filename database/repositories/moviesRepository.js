@@ -1,7 +1,7 @@
 const axios = require('axios');
 const pgClient = require('../database');
 const moviesValidate = require('../../validate/getMoviesValidate')
-const { formatResult } = require('../../services/formatData')
+const { formatMovies } = require('../../services/formatData')
 
 let page = 1;
 const getIdMovies = async () => {
@@ -110,7 +110,7 @@ const getMovieById = async (movie_id) => {
         const movie = await pgClient.query(`SELECT * FROM movies_genres INNER JOIN movies
         ON movie_id = movies.id WHERE movies.id = ${movie_id};`);
         if (!movie.rows[0]) return { error: { data: 'Not found', status: 404 } };
-        return { result: formatResult(movie.rows) };
+        return { result: formatMovies(movie.rows) };
     } catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };
