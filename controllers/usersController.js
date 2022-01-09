@@ -13,7 +13,7 @@ const createUser = async (body) => {
         const { error: dbError, result } = await usersRepository.createUser(value, hashPassword);
 
         if (dbError) return { error: { status: 500, data: dbError } };
-        return { result: { data: result, status: 201 } };
+        return { result: { data: "Registration successful", status: 201 } };
 
     } catch (err) {
         console.error(err);
