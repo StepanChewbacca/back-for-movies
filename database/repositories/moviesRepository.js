@@ -92,7 +92,6 @@ const getMovies = async ( {adult, page, perPage, title, languages,
             options.length = 0;
         }
         pgQuery += `ORDER BY id OFFSET ${(page - 1) * perPage} LIMIT ${perPage};`;
-        console.log(pgQuery);
         const movies = await pgClient.query(pgQuery);
         return movies.rows;
     }
@@ -104,10 +103,9 @@ const getMovies = async ( {adult, page, perPage, title, languages,
 
 const getMovieById = async (movie_id) => {
     try {
-        const movie = await pgClient.query(`SELECT * FROM movies_genres INNER JOIN movies
-        ON movie_id = movies.id WHERE movies.id = ${movie_id};`);
-        if (!movie.rows[0]) return { error: { data: 'Not found', status: 404 } };
-        return { result: formatMovies(movie.rows) };
+        const movie = await pgClient.query(`SELECT * FROM movies WHERE id = ${movie_id};`);
+        return { result:  await formatMovies(movie.rows) };
+
     } catch (err) {
         console.error('getMovies repo: ', err);
         return { error: err };

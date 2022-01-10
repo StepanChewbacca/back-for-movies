@@ -20,8 +20,9 @@ const getMovies = async (query) => {
 const getMovieById = async (movie_id) => {
     try {
         const { error: dbError, result } = await moviesRepository.getMovieById(movie_id);
-        if (!result[0]) return { data: 'Not found', status: 404 };
-
+        if (!result[0]) return { result: { data: 'Not found', status: 404 }};
+        if (dbError) return { error: { status: 500, data: dbError } };
+        console.log(result)
         return { result: { data: result, status: 200 } };
     } catch (err) {
         console.error('getMovieById: ', err);

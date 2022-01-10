@@ -1,19 +1,5 @@
 const genreRepository = require('../database/repositories/genresRepository');
 
-const formatResult = (allMovies) => {
-    return allMovies.reduce((acc, item) => {
-        const check = acc.find((movie) => movie.id === item.movie_id);
-        const genresArr = [];
-        if (!check) {
-
-            acc.push({ genres: genresArr, ...item });
-        } else {
-            check.genres.push(item.genre_id);
-        }
-        return acc;
-    }, []);
-};
-
 const formatMovies = async (movies) => {
     const table = []
     for (let element of movies) {
@@ -45,4 +31,4 @@ const formatMovies = async (movies) => {
 };
 
 
-module.exports = { formatResult, formatMovies };
+module.exports = { formatMovies };
