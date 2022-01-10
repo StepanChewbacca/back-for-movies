@@ -56,7 +56,6 @@ const getGenresId = async (movieId, genresArray) => {
         console.error('getGenresId: ', err);
         return { error: err };
     }
-
 };
 
 const setMoviesGenres = async (movieId, { id: genresId }) => {
@@ -67,7 +66,6 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
         console.error('setMoviesGenres: ', err);
         return { error: err };
     }
-
 };
 
 
@@ -111,9 +109,6 @@ const getMovieById = async (movie_id) => {
         return { error: err };
     }
 };
-
-
-
 
 module.exports = {
     getIdMovies,
