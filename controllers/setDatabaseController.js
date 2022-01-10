@@ -9,13 +9,11 @@ const setDatabase = async ({login, password, api_key}) => {
     try {
         const { result: {data: { userRole } }  } = await userController.loginUser({login, password})
         if (userRole !== 'admin') return { error: "User is not admin" };
-
         await setGenres(api_key)
-        //if (dbError) return { error: { status: 500, data: dbError } };
-        const { error: dbError} = await setMoviesControll()
+        const { error: dbError,  result } = await setMovies()
 
         if (dbError) return { error: { status: 500, data: dbError } };
-        return { result: { data: 'Movies was set', status: 201 } };
+        return { result: { data: result, status: 201 } };
     } catch (err) {
         console.error('getGenres: ', err);
         return { error: err };
@@ -40,7 +38,7 @@ const setGenres = async (api_key) => {
 
 };
 
-const setMoviesControll = async () => {
+const setMovies = async () => {
     try {
         await moviesRepository.getIdMovies();
         return { data: "Movies was set" };

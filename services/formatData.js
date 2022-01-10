@@ -4,7 +4,7 @@ const formatMovies = async (movies) => {
     const table = []
     for (let element of movies) {
         let id = element.id
-        const genres = await genreRepository.getGenresById(id);
+        const genres = await genreRepository.getGenresByMovieId(id);
         const row = {
             id: element.id,
             adult: element.adult,
@@ -30,5 +30,13 @@ const formatMovies = async (movies) => {
     return table
 };
 
+// const replaceApostrophe = async (arr) => {
+//     const obj = {}
+//     for (let element of arr) {
+//         obj[element] = element.replace(/'/gi, '\'\'')
+//     }
+//     return obj
+// }
 
-module.exports = { formatMovies };
+
+module.exports = { formatMovies, };
