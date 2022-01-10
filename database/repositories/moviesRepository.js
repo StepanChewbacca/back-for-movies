@@ -75,7 +75,7 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 
 
 const getMovies = async ({ adult, page, perPage, title, languages,
-    budget_min, budget_max, genre_id }) => {
+    budget_min, budget_max, genre_id, minDate, maxDate }) => {
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
@@ -89,6 +89,8 @@ const getMovies = async ({ adult, page, perPage, title, languages,
         if (budget_max) options.push(`movies.budget < ${budget_max}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (languages) options.push(`movies.original_language = '${languages}'`);
+        if (minDate) options.push(`movies.release_date > '${minDate}'`);
+        if (maxDate) options.push(`movies.release_date < '${maxDate}'`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
             options.length = 0;
@@ -102,6 +104,7 @@ const getMovies = async ({ adult, page, perPage, title, languages,
         return { error: err };
     }
 }
+
 
 const getMovieById = async (movie_id) => {
     try {
