@@ -70,15 +70,6 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 
 };
 
-const getMovieByImdbId = async ({imdb_id}) => {
-    try {
-        const genre = await pgClient.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
-        return genre.rows[0];
-    } catch (err) {
-        console.error('setGenresForMovies: ', err);
-        return { error: err };
-    }
-};
 
 const getMovies = async ( {adult, page, perPage, title, languages,
                              budget_min, budget_max, genre_id} ) => {
