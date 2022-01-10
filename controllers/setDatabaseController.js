@@ -5,15 +5,15 @@ const moviesRepository = require('../database/repositories/moviesRepository');
 
 
 
-const setDatabase = async ({login, password, api_key}) => {
+const setDatabase = async ({ login, password, api_key }) => {
     try {
-        const { result: {data: { userRole } }  } = await userController.loginUser({login, password})
+        const { result: { data: { userRole } } } = await userController.loginUser({ login, password })
         if (userRole !== 'admin') return { error: "User is not admin" };
         await setGenres(api_key)
-        const { error: dbError,  result } = await setMovies()
+        const { error: dbError } = await setMovies()
 
         if (dbError) return { error: { status: 500, data: dbError } };
-        return { result: { data: result, status: 201 } };
+        return { result: { data: 'Movies was set', status: 201 } };
     } catch (err) {
         console.error('getGenres: ', err);
         return { error: err };
@@ -27,7 +27,7 @@ const setGenres = async (api_key) => {
         for (const item of genres) {
             const genreName = await genreRepository.getGenreByName(item)
             if (!genreName) {
-                const { error: dbError} = await genreRepository.setGenres(item);
+                const { error: dbError } = await genreRepository.setGenres(item);
                 if (dbError) return { error: { status: 500, data: dbError } };
             }
         }

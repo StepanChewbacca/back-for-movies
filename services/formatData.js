@@ -30,13 +30,13 @@ const formatMovies = async (movies) => {
     return table
 };
 
-// const replaceApostrophe = async (arr) => {
-//     const obj = {}
-//     for (let element of arr) {
-//         obj[element] = element.replace(/'/gi, '\'\'')
-//     }
-//     return obj
-// }
+const replaceApostrophe = async (obj) => {
+    for (let key in obj) {
+        obj[key] = obj[key].replace(/'/gi, '\'\'')
+        console.log(obj[key]);
+    }
+    return obj
+}
 
 
-module.exports = { formatMovies, };
+module.exports = { formatMovies, replaceApostrophe };

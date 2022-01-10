@@ -1,6 +1,6 @@
 const axios = require('axios');
 const pgClient = require('../database');
-const { formatMovies,  } = require('../../services/formatData')
+const { formatMovies, replaceApostrophe } = require('../../services/formatData')
 
 let page = 1;
 const getIdMovies = async () => {
@@ -11,7 +11,7 @@ const getIdMovies = async () => {
             await setMovies(item);
         }
         page++;
-        if (page > 1) {
+        if (page > 2) {
             return;
         }
         await getIdMovies();
@@ -29,20 +29,18 @@ const setMovies = async ({ id }) => {
         const idResult = await pgClient.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
         if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
         const { data } = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=483f32e50b323d6e44691437daeb45e7`);
-        console.log(data.results[0])
         if (data) {
             const trailer = data.results[0].key;
-           // const replacedItems = await replaceApostrophe([tagline, original_title, title, overview])
-            //console.log(replacedItems)
+            const replacedApostrophe = await replaceApostrophe({ title, original_title, overview, tagline })
             const result = await pgClient.query(
                 `INSERT INTO movies(adult,
               backdrop_path, budget, homepage,imdb_id, original_language, original_title,
               title, overview, popularity, poster_path, release_date, revenue, runtime,
               tagline, trailer)
          VALUES(${adult},'${backdrop_path}',${budget},'${homepage}',
-         '${imdb_id}','${original_language}','${original_title}',
-         '${title}','${overview}',${popularity},'${poster_path}',
-         '${release_date}',${revenue},${runtime},'${tagline}','${trailer}') returning*;`);
+         '${imdb_id}','${original_language}','${replacedApostrophe.original_title}',
+         '${replacedApostrophe.title}','${replacedApostrophe.overview}',${popularity},'${poster_path}',
+         '${release_date}',${revenue},${runtime},'${replacedApostrophe.tagline}','${trailer}') returning*;`);
 
             await getGenresId(result.rows[0].id, genres);
         }
@@ -76,8 +74,8 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 };
 
 
-const getMovies = async ( {adult, page, perPage, title, languages,
-                             budget_min, budget_max, genre_id} ) => {
+const getMovies = async ({ adult, page, perPage, title, languages,
+    budget_min, budget_max, genre_id }) => {
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
@@ -108,7 +106,7 @@ const getMovies = async ( {adult, page, perPage, title, languages,
 const getMovieById = async (movie_id) => {
     try {
         const movie = await pgClient.query(`SELECT * FROM movies WHERE id = ${movie_id};`);
-        return { result:  await formatMovies(movie.rows) };
+        return { result: await formatMovies(movie.rows) };
 
     } catch (err) {
         console.error('getMovies repo: ', err);
