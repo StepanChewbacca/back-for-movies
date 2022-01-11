@@ -33,7 +33,6 @@ const formatMovies = async (movies) => {
 const replaceApostrophe = async (obj) => {
     for (let key in obj) {
         obj[key] = obj[key].replace(/'/gi, '\'\'')
-        console.log(obj[key]);
     }
     return obj
 }

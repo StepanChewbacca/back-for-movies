@@ -8,7 +8,7 @@ const createUser = async (body) => {
         console.log(error.message);
         console.log(body.password);
         if (error.message.includes('password'))
-            error.message = 'Password must containts at least number, one upper letter and minimum 8 characters '
+            error.message = 'Password must contains at least number, one upper letter and minimum 8 characters '
         if (error) {
             return { error: { status: 400, data: error.message } };
         }

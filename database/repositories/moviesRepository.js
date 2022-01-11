@@ -29,7 +29,7 @@ const setMovies = async ({ id }) => {
         const idResult = await pgClient.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
         if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
         const { data } = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=483f32e50b323d6e44691437daeb45e7`);
-        if (data) {
+        if (data && data.results.length >0) {
             const trailer = data.results[0].key;
             const replacedApostrophe = await replaceApostrophe({ title, original_title, overview, tagline })
             const result = await pgClient.query(
@@ -75,7 +75,7 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 
 
 const getMovies = async ({ adult, page, perPage, title, languages,
-    budget_min, budget_max, genre_id, minDate, maxDate }) => {
+    budget_min, budget_max, genre_id, minDate, maxDate}) => {
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
@@ -89,18 +89,18 @@ const getMovies = async ({ adult, page, perPage, title, languages,
         if (budget_max) options.push(`movies.budget < ${budget_max}`);
         if (title) options.push(`movies.title ILIKE '%${title}%'`);
         if (languages) options.push(`movies.original_language = '${languages}'`);
-        if (minDate) options.push(`movies.release_date > '${minDate}'`);
-        if (maxDate) options.push(`movies.release_date < '${maxDate}'`);
+        if (minDate && maxDate) options.push(`movies.release_date BETWEEN '${new Date(minDate).toDateString()}' AND '${new Date(maxDate).toDateString()}'`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
             options.length = 0;
         }
         pgQuery += `ORDER BY id OFFSET ${(page - 1) * perPage} LIMIT ${perPage};`;
+        console.log(pgQuery)
         const movies = await pgClient.query(pgQuery);
-        return movies.rows;
+        return { result: movies.rows };
     }
     catch (err) {
-        console.error('getMovies repo: ', err);
+        //console.error('getMovies repo: ', err);
         return { error: err };
     }
 }
