@@ -1,16 +1,16 @@
 const { createUserValidate, loginUserValidate } = require('../validate/usersValidate');
 const usersRepository = require('../database/repositories/usersRepository');
 const { hash } = require('../services/passwordServices');
+const { setMessageError } = require('../services/errors');
 
 const createUser = async (body) => {
     try {
         const { error, value } = await createUserValidate.validate(body, { abortEarly: false });
-        console.log(error.message);
-        console.log(body.password);
-        if (error.message.includes('password'))
-            error.message = 'Password must contains at least number, one upper letter and minimum 8 characters '
+
         if (error) {
-            return { error: { status: 400, data: error.message } };
+            const currentErrorMessage =  await setMessageError(error)
+            console.log(currentErrorMessage)
+            return { error: { status: 400, data: currentErrorMessage.message } };
         }
         const hashPassword = await hash(value.password);
 
