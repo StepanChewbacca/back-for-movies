@@ -23,7 +23,7 @@ const createUser = async (body) => {
         return { result: { data: "Registration successful", status: 201 } };
     } catch (err) {
         console.error(err);
-        return { error: err.details[0].message };
+        return { error: err.details[0].message, status: 400 };
     }
 };
 

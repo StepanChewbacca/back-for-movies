@@ -14,7 +14,8 @@ const getMovieValidate = Joi.object({
     budget_max: Joi.number().positive().integer().min(0),
     genre_id: Joi.number().positive().integer(),
     minDate: Joi.date(),
-    maxDate: Joi.date()
+    maxDate: Joi.date(),
+    id: Joi.number().positive().integer().min(1)
 });
 module.exports = {
     getMovieValidate
