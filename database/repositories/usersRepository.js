@@ -8,7 +8,7 @@ const createUser = async ({ login, first_name, last_name, user_role }, hashPassw
         VALUES('${hashPassword}','${login}','${first_name}','${last_name}','${user_role}') RETURNING *;`);
         return { result: user.rows[0] };
     } catch (err) {
-        return { error: err.message };
+        return { error: err };
     }
 };
 
@@ -20,6 +20,7 @@ const loginUser = async ({ login, password }) => {
         return { result: { accessToken, userRole: user.rows[0].user_role } };
 
     } catch (err) {
+        console.log(err)
         return { error: err };
     }
 };

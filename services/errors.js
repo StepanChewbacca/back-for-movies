@@ -1,4 +1,4 @@
-const setMessageError = async (error) => {
+const setMessageErrorValidation = async (error) => {
     if (error.message.includes('password')) {
         error.message = 'Password must contains at least number, one upper character and minimum 8 characters '
     }
@@ -14,4 +14,11 @@ const setMessageError = async (error) => {
     return error
 }
 
-module.exports = { setMessageError }
+const setMessageErrorUserDB = async (error) => {
+    if (error.message.includes('users_login_key')) {
+        error.message = 'User with this login already exists'
+    }
+    return error
+}
+
+module.exports = { setMessageErrorValidation, setMessageErrorUserDB };
