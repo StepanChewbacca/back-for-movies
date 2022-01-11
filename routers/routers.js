@@ -10,7 +10,7 @@ const genresController = require('../controllers/genresController');
 const router = async ({ req, res, body }) => {
     try {
         const { pathname, query } = URL.parse(req.url, true);
-
+        let result, error;
         switch (true) {
             case (req.method === 'POST' && pathname === routes.SIGN_UP):
                 ({ error, result } = await userRepository.createUser(body));
@@ -36,7 +36,7 @@ const router = async ({ req, res, body }) => {
         }
 
         if (error) {
-            res.statusCode = 404;
+            res.statusCode = error.status || 400;
             return res.end(JSON.stringify({ message: error }) || JSON.stringify({ message: error.message }));
         }
         res.statusCode = result.status;

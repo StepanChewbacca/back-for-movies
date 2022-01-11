@@ -113,7 +113,6 @@ const getMovieById = async (movie_id) => {
         return { result: await formatMovies(movie.rows) };
 
     } catch (err) {
-        console.error('getMovies repo: ', err);
         return { error: err };
     }
 };
