@@ -11,7 +11,7 @@ const getIdMovies = async () => {
             await setMovies(item);
         }
         page++;
-        if (page > 2) {
+        if (page > 6) {
             return;
         }
         await getIdMovies();
@@ -79,9 +79,12 @@ const getMovies = async ({ adult, page, perPage, title, languages,
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
+        let pgQueryCount = 'SELECT COUNT(id) FROM movies '
         if (genre_id) {
             pgQuery = `SELECT * FROM movies LEFT JOIN
     movies_genres ON movies.id = movie_id `;
+            pgQueryCount = `SELECT COUNT(id) FROM movies LEFT JOIN
+    movies_genres ON movies.id = movie_id `
             options.push(`genre_id = ${genre_id}`);
         }
         if (adult) options.push(`movies.adult = ${adult}`);
@@ -93,12 +96,14 @@ const getMovies = async ({ adult, page, perPage, title, languages,
         if (id) options.push(`movies.id != ${id}`);
         if (options.length !== 0) {
             pgQuery += `WHERE ${options.join(' AND ')} `;
+            pgQueryCount += `WHERE ${options.join(' AND ')} `
             options.length = 0;
         }
         pgQuery += `ORDER BY id OFFSET ${(page - 1) * perPage} LIMIT ${perPage};`;
-        console.log(pgQuery)
+        console.log(pgQueryCount)
         const movies = await pgClient.query(pgQuery);
-        return { result: movies.rows };
+        const totalCount = await pgClient.query(pgQueryCount)
+        return { result: { data: movies.rows, totalCount : totalCount.rows[0] }};
     }
     catch (err) {
         //console.error('getMovies repo: ', err);

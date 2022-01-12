@@ -5,12 +5,7 @@ const hash = (password) => bcrypt.hash(password, SALT);
 
 const compare = async (password, hashPassword) => {
     try {
-        const isMatched = await bcrypt.compare(password, hashPassword);
-
-        if (!isMatched) {
-            throw new Error('Invalid Data');
-        }
-
+        return await bcrypt.compare(password, hashPassword);
     } catch (err) {
         console.error('compare: ', err);
     }

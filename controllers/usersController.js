@@ -35,7 +35,8 @@ const loginUser = async (body) => {
         }
 
         const { error: dbError, result } = await usersRepository.loginUser(value);
-        if (!result) return { error: "Login not found" };
+
+        console.log(result)
 
         if (dbError) return { error: { status: 500, data: dbError } };
         return { result: { data: result, status: 200 } };

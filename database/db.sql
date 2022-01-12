@@ -1,3 +1,8 @@
+CREATE TYPE roles AS ENUM (
+	'admin',
+	'user');
+
+
 CREATE TABLE users(
 id SERIAL PRIMARY KEY NOT NULL,
 password VARCHAR(140) NOT NULL,
@@ -21,7 +26,7 @@ title VARCHAR(255),
 overview TEXT NOT NULL,
 popularity INT,
 poster_path TEXT NOT NULL,
-release_date VARCHAR(255),
+release_date date,
 revenue BIGINT,
 runtime INT NOT NULL,
 tagline VARCHAR(255),

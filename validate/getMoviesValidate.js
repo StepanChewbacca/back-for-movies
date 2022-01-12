@@ -5,7 +5,7 @@ const getMovieValidate = Joi.object({
     page: Joi.number().positive().integer().min(1)
         .default(1),
     perPage: Joi.number().positive().integer().min(1)
-        .default(200),
+        .default(5),
     adult: Joi.boolean(),
     budget: Joi.number().positive().integer().min(0),
     title: Joi.string(),
