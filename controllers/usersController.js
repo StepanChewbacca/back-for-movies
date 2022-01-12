@@ -8,22 +8,21 @@ const createUser = async (body) => {
         const { error, value } = await createUserValidate.validate(body, { abortEarly: false });
 
         if (error) {
-            const currentErrorMessage =  await setMessageErrorValidation(error)
+            const currentErrorMessage = await setMessageErrorValidation(error)
             return { error: { status: 400, data: currentErrorMessage.message } };
         }
 
         const hashPassword = await hash(value.password);
         const { error: dbError } = await usersRepository.createUser(value, hashPassword);
 
-        if (dbError){
-            const currentErrorMessage =  await setMessageErrorUserDB(dbError)
-            return { error: { status: 500, data: currentErrorMessage.message } };
+        if (dbError) {
+            return { error: { status: 500, data: setMessageErrorUserDB(dbError) } };
         }
 
         return { result: { data: "Registration successful", status: 201 } };
     } catch (err) {
         console.error(err);
-        return { error: err.details[0].message, status: 400 };
+        return { error: err?.details[0]?.message, status: 400 };
     }
 };
 

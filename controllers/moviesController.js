@@ -13,14 +13,14 @@ const getMovies = async (query) => {
         return { result: { data: await formatMovies(result), status: 200 } };
     } catch (err) {
         console.error('getMovies: ', err);
-        return { error: err, status: 500};
+        return { error: err, status: 500 };
     }
 };
 
 const getMovieById = async (movie_id) => {
     try {
         const { error: dbError, result } = await moviesRepository.getMovieById(movie_id);
-        if (!result || !result.length ) return { result: { data: 'Not found', status: 404 }};
+        if (!result || !result.length) return { result: { data: 'Not found', status: 404 } };
         if (dbError) return { error: { status: 500, data: dbError } };
         return { result: { data: result, status: 200 } };
     } catch (err) {

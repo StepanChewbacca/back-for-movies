@@ -4,8 +4,8 @@ const pgClient = new Client({
     host: 'localhost',
     port: 5432,
     user: 'postgres',
-    password: '12345678',
-    database: 'movie'
+    password: 'Vfrcbv282002',
+    database: 'movieapi'
 });
 
 pgClient.connect(err => {

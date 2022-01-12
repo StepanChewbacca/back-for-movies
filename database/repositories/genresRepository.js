@@ -1,6 +1,6 @@
 const pgClient = require('../database');
 
-const getGenreByName = async ({name}) => {
+const getGenreByName = async ({ name }) => {
     try {
         const genre = await pgClient.query(`SELECT name FROM genres WHERE name='${name}';`);
         return genre.rows[0];
@@ -30,9 +30,10 @@ const setGenres = async ({ id, name }) => {
 const getGenresByMovieId = async (movie_id) => {
     try {
         const genre = await pgClient.query(`SELECT genre_id FROM movies_genres WHERE movie_id = ${movie_id};`);
-        const values = genre.rows.map(e => Object.values(e));
-        const result = values.flat();
-        return  result ;
+        return genre.rows.map((genr) => genr.id)
+        // const values = genre.rows.map(e => Object.values(e));
+        // const result = values.flat();
+        // return  result ;
     } catch (err) {
         return { error: err };
     }
@@ -42,4 +43,5 @@ module.exports = {
     setGenres,
     getGenreByName,
     getGenresByMovieId,
-    getGenres };
+    getGenres
+};

@@ -27,9 +27,9 @@ const setMovies = async ({ id }) => {
         let { data: { adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, title, overview, popularity, poster_path, release_date, revenue, runtime, genres, tagline } } = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=483f32e50b323d6e44691437daeb45e7`);
 
         const idResult = await pgClient.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
-        if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
+        if (idResult.rowCount) return { error: "The movie is exist in dataBase" };
         const { data } = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=483f32e50b323d6e44691437daeb45e7`);
-        if (data && data.results.length >0) {
+        if (data && data.results.length > 0) {
             const trailer = data.results[0].key;
             const replacedApostrophe = await replaceApostrophe({ title, original_title, overview, tagline })
             const result = await pgClient.query(
@@ -40,7 +40,7 @@ const setMovies = async ({ id }) => {
          VALUES(${adult},'${backdrop_path}',${budget},'${homepage}',
          '${imdb_id}','${original_language}','${replacedApostrophe.original_title}',
          '${replacedApostrophe.title}','${replacedApostrophe.overview}',${popularity},'${poster_path}',
-         '${release_date}',${revenue},${runtime},'${replacedApostrophe.tagline}','${trailer}') returning*;`);
+         '${release_date}',${revenue},${runtime},'${replacedApostrophe.tagline}','${trailer}') returning *;`);
 
             await getGenresId(result.rows[0].id, genres);
         }
@@ -75,7 +75,7 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 
 
 const getMovies = async ({ adult, page, perPage, title, languages,
-    budget_min, budget_max, genre_id, minDate, maxDate, id}) => {
+    budget_min, budget_max, genre_id, minDate, maxDate, id }) => {
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
