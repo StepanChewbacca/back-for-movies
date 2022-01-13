@@ -16,7 +16,7 @@ const router = async ({ req, res, body }) => {
                 ({ error, result } = await usersController.createUser(body));
                 break;
             case (req.method === 'POST' && pathname === routes.SIGN_IN):
-                ({ error, result } = await usersController.loginUser(body));
+                ({ error, result } = await usersController.login(body));
                 break;
              case (req.method === 'POST' && pathname === routes.DATABASE_SET):
                  ({ error, result } = await setDatabaseController.setDatabase(body));
@@ -30,6 +30,7 @@ const router = async ({ req, res, body }) => {
             case (req.method === 'GET' && pathname === `${routes.GENRES}`):
                 ({ error, result } = await genresController.getGenres());
                 break;
+                
             default:
                 res.statusCode = 404;
                 return res.end(JSON.stringify({ message: "route not found" }));
@@ -39,6 +40,7 @@ const router = async ({ req, res, body }) => {
             res.statusCode = error.status || 400;
             return res.end(JSON.stringify({ message: error }) || JSON.stringify({ message: error.message }));
         }
+        if (result.accessToken) res.setHeader('token', result.accessToken);
         res.statusCode = result.status;
         return res.end(JSON.stringify( result.data ));
     } catch (err) {

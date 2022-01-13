@@ -7,8 +7,8 @@ const moviesRepository = require('../database/repositories/moviesRepository');
 
 const setDatabase = async ({ login, password, api_key }) => {
     try {
-        const { result: { data: { userRole } } } = await userController.loginUser({ login, password })
-        if (userRole !== 'admin') return { error: "User is not admin" };
+        const { result } = await userController.login({ login, password })
+        if (result.data !== 'admin') return { error: "User is not admin" };
         await setGenres(api_key)
         const { error: dbError } = await setMovies()
 

@@ -12,15 +12,13 @@ const createUser = async ({ login, first_name, last_name, user_role }, hashPassw
     }
 };
 
-const loginUser = async ({ login, password }) => {
+const loginUser = async (login) => {
     try {
         const user = await pgClient.query(`SELECT login, password, user_role FROM users WHERE login ='${login}'`);
-        if (await compare(password, user.rows[0].password)) {
-            const { accessToken } = generateTokens();
-            return { result: { accessToken, userRole: user.rows[0].user_role } };
-        }
-        return { result:  'Invalid login or password'  };
-
+        console.log(user.rows);
+        const checkUserRole = user.rows[0].user_role;
+        const checkPassword = user.rows[0].password;
+        return { checkUserRole: checkUserRole, checkPassword: checkPassword  };
     } catch (err) {
         console.log(err)
         return { error: err };

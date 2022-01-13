@@ -25,7 +25,7 @@ const generateActionToken = (typeAction) => {
 const generateTokens = () => {
     const accessToken = jwt.sign(
         {}, "ACCESS_TOKEN_SECRET",
-        { expiresIn: '30m' }
+        { expiresIn: '24h' }
     );
     const refreshToken = jwt.sign(
         {}, "REFRESH_TOKEN_SECRET",
