@@ -1,6 +1,6 @@
 const URL = require('url');
 const routes = require('../constants/routes');
-const userRepository = require('../controllers/usersController');
+const usersController = require('../controllers/usersController');
 const setDatabaseController = require('../controllers/setDatabaseController');
 const moviesController = require('../controllers/moviesController');
 const genresController = require('../controllers/genresController');
@@ -13,10 +13,10 @@ const router = async ({ req, res, body }) => {
         let result, error;
         switch (true) {
             case (req.method === 'POST' && pathname === routes.SIGN_UP):
-                ({ error, result } = await userRepository.createUser(body));
+                ({ error, result } = await usersController.createUser(body));
                 break;
             case (req.method === 'POST' && pathname === routes.SIGN_IN):
-                ({ error, result } = await userRepository.loginUser(body));
+                ({ error, result } = await usersController.loginUser(body));
                 break;
              case (req.method === 'POST' && pathname === routes.DATABASE_SET):
                  ({ error, result } = await setDatabaseController.setDatabase(body));
