@@ -1,0 +1,648 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "movie API"
+  },
+  "host": "127.0.0.1:3001",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "users",
+      "description": ""
+    },
+    {
+      "name": "movies",
+      "description": ""
+    },
+    {
+      "name": "genres",
+      "description": ""
+    },
+    {
+      "name": "languages",
+      "description": ""
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/sign_up": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create user",
+        "description": "",
+        "operationId": "addUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Write users data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sign_up"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "create user",
+            "schema": {
+              "type": "object",
+              "required": [
+                "message"
+              ],
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Registration successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Sql Error"
+          }
+        }
+      }
+    },
+    "/sign_in": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Login user",
+        "description": "",
+        "operationId": "loginUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Write users data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sign_in"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "login user",
+            "schema": {
+              "type": "object",
+              "required": [
+                "message"
+              ],
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "500": {
+            "description": "sql error"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Get movies",
+        "description": "",
+        "operationId": "getMoviesList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "adult",
+            "in": "query",
+            "description": "adult",
+            "type": "boolean"
+          },
+          {
+            "name": "min budget",
+            "in": "query",
+            "description": "min budget",
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "name": "max budget",
+            "in": "query",
+            "description": "max budget",
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "title",
+            "type": "string"
+          },
+          {
+            "name": "languages",
+            "in": "query",
+            "description": "language",
+            "type": "string"
+          },
+          {
+            "name": "minDate",
+            "in": "query",
+            "description": "min date",
+            "type": "string"
+          },
+          {
+            "name": "maxDate",
+            "in": "query",
+            "description": "max date",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "movie id what dont need in responce",
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "token",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get movies list",
+            "schema": {
+              "$ref": "#/definitions/moviesListResponse"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "500": {
+            "description": "sql error"
+          }
+        }
+      }
+    },
+    "/movies/id": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Get movie by id",
+        "description": "",
+        "operationId": "getMovieById",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "movie id",
+            "in": "query",
+            "description": "movie id",
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "token",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get movie by id",
+            "schema": {
+              "$ref": "#/definitions/moviesResponse"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "500": {
+            "description": "sql error"
+          }
+        }
+      }
+    },
+    "/genres": {
+      "get": {
+        "tags": [
+          "genres"
+        ],
+        "summary": "Get genres",
+        "description": "",
+        "operationId": "getGenres",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "token",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get movie by id",
+            "schema": {
+              "$ref": "#/definitions/genresResponce"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "500": {
+            "description": "sql error"
+          }
+        }
+      }
+    },
+    "/languages": {
+      "get": {
+        "tags": [
+          "languages"
+        ],
+        "summary": "Get languages",
+        "description": "",
+        "operationId": "getLanguages",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "token",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get languages",
+            "schema": {
+              "$ref": "#/definitions/languagesResponce"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "500": {
+            "description": "sql error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "sign_up": {
+      "type": "object",
+      "required": [
+        "login",
+        "password",
+        "name",
+        "accreditation"
+      ],
+      "properties": {
+        "login": {
+          "type": "string",
+          "example": "stepan"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456789Aa"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "Joe"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        }
+      },
+      "xml": {
+        "name": "create User"
+      }
+    },
+    "sign_in": {
+      "type": "object",
+      "required": [
+        "login",
+        "password"
+      ],
+      "properties": {
+        "login": {
+          "type": "string",
+          "example": "stepan"
+        },
+        "password": {
+          "type": "string",
+          "example": "12345678Aa"
+        }
+      },
+      "xml": {
+        "name": "movies"
+      }
+    },
+    "moviesListResponse": {
+      "type": "object",
+      "required": [
+        "movies",
+        "totalCount"
+      ],
+      "properties": {
+        "totalCount": {
+          "type": "integer",
+          "example": 100
+        },
+        "movies": {
+          "required": [
+            "id",
+            "adult",
+            "backdrop_path",
+            "budget",
+            "homepage",
+            "imdb_id",
+            "original_language",
+            "original_title",
+            "title",
+            "overview",
+            "popularity",
+            "poster_path",
+            "release_date",
+            "revenue",
+            "runtime",
+            "tagline",
+            "trailer",
+            "genres"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 1
+            },
+            "adult": {
+              "type": "boolean",
+              "example": true
+            },
+            "backdrop_path": {
+              "type": "string",
+              "example": "1Rr5SrvHxMXHu5RjKpaMba8VTzi.jpg"
+            },
+            "budget": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 200000000
+            },
+            "homepage": {
+              "type": "string",
+              "example": "https://www.spidermannowayhome.movie"
+            },
+            "imdb_id": {
+              "type": "string",
+              "example": "tt10872600"
+            },
+            "original_language": {
+              "type": "string",
+              "example": "en"
+            },
+            "original_title": {
+              "type": "string",
+              "example": "Spider-Man No Way Home"
+            },
+            "title": {
+              "type": "string",
+              "example": "Spider-Man No Way Home"
+            },
+            "overview": {
+              "type": "string",
+              "example": "Peter Parker is unmasked and longer able to separate his normal life"
+            },
+            "popularity": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 8022
+            },
+            "poster_path": {
+              "type": "string",
+              "example": "/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"
+            },
+            "release_date": {
+              "type": "string",
+              "example": "2021-12-14T22:00:00.000Z"
+            },
+            "revenue": {
+              "type": "integer",
+              "example": 1535856116
+            },
+            "runtime": {
+              "type": "integer",
+              "example": 148
+            },
+            "tagline": {
+              "type": "string",
+              "example": "The Multiverse unleashed."
+            },
+            "trailer": {
+              "type": "string",
+              "example": "Bh8NeyejykU"
+            },
+            "genres": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "moviesResponse": {
+      "type": "object",
+      "required": [
+        "id",
+        "adult",
+        "backdrop_path",
+        "budget",
+        "homepage",
+        "imdb_id",
+        "original_language",
+        "original_title",
+        "title",
+        "overview",
+        "popularity",
+        "poster_path",
+        "release_date",
+        "revenue",
+        "runtime",
+        "tagline",
+        "trailer",
+        "genres"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 1
+        },
+        "adult": {
+          "type": "boolean",
+          "example": true
+        },
+        "backdrop_path": {
+          "type": "string",
+          "example": "1Rr5SrvHxMXHu5RjKpaMba8VTzi.jpg"
+        },
+        "budget": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 200000000
+        },
+        "homepage": {
+          "type": "string",
+          "example": "https://www.spidermannowayhome.movie"
+        },
+        "imdb_id": {
+          "type": "string",
+          "example": "tt10872600"
+        },
+        "original_language": {
+          "type": "string",
+          "example": "en"
+        },
+        "original_title": {
+          "type": "string",
+          "example": "Spider-Man No Way Home"
+        },
+        "title": {
+          "type": "string",
+          "example": "Spider-Man No Way Home"
+        },
+        "overview": {
+          "type": "string",
+          "example": "Peter Parker is unmasked and longer able to separate his normal life"
+        },
+        "popularity": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 8022
+        },
+        "poster_path": {
+          "type": "string",
+          "example": "/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"
+        },
+        "release_date": {
+          "type": "string",
+          "example": "2021-12-14T22:00:00.000Z"
+        },
+        "revenue": {
+          "type": "integer",
+          "example": 1535856116
+        },
+        "runtime": {
+          "type": "integer",
+          "example": 148
+        },
+        "tagline": {
+          "type": "string",
+          "example": "The Multiverse unleashed."
+        },
+        "trailer": {
+          "type": "string",
+          "example": "Bh8NeyejykU"
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "genresResponce": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        },
+        "name": {
+          "type": "string",
+          "example": "Action"
+        }
+      },
+      "xml": {
+        "name": "create User"
+      }
+    },
+    "languagesResponce": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 2
+        },
+        "name": {
+          "type": "string",
+          "example": "en"
+        }
+      }
+    }
+  }
+}

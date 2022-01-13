@@ -8,13 +8,13 @@ const getIdMovies = async () => {
     try {
         const { data: { results } } = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=483f32e50b323d6e44691437daeb45e7&page=${page}`);
         for (const item of results) {
-            await setMovies(item);
+            setMovies(item);
         }
         page++;
-        if (page > 6) {
+        if (page > 100) {
             return;
         }
-        await getIdMovies();
+        getIdMovies();
     } catch (err) {
         console.error('getIdMovies: ', err);
         return { error: err };
