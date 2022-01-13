@@ -7,10 +7,11 @@ const loginUser = async ({login, password}) => {
     try {
         const { error: repoError, checkUserRole, checkPassword } = await usersRepository.loginUser(login);
         if (repoError) return repoError;
-        const { error } = await passwordServices.compare(password, checkPassword);
-        const { accessToken } = jwtServices.generateTokens();
-        if (error) return error;
-        return { data: { checkUserRole, accessToken } };
+        if (await passwordServices.compare(password, checkPassword)) {
+            const { accessToken } = jwtServices.generateTokens();
+            return { data: { checkUserRole, accessToken } };
+        }
+        return { error: {message: 'Invalid login or password', statusCode: 401} };
 
     } catch (err) {
         return { error: err };

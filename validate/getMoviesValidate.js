@@ -15,8 +15,15 @@ const getMovieValidate = Joi.object({
     genre_id: Joi.number().positive().integer(),
     minDate: Joi.date(),
     maxDate: Joi.date(),
-    id: Joi.number().positive().integer().min(1)
+    id: Joi.number().positive().integer().min(1),
+    token: Joi.any()
+});
+
+const getMovieByIdValidate = Joi.object({
+    id: Joi.number().positive().integer().min(1),
+    token: Joi.any()
 });
 module.exports = {
-    getMovieValidate
+    getMovieValidate,
+    getMovieByIdValidate
 }

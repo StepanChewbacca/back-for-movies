@@ -55,11 +55,11 @@ const verifyTokens = (token, tokenType = 'access') => {
         const secret = tokenType === 'access'
             ? "ACCESS_TOKEN_SECRET"
             : "REFRESH_TOKEN_SECRET";
-        jwt.verify(token, secret);
+        const verify = jwt.verify(token, secret);
+        //console.log(verify);
+        return { data: verify };
     } catch (err) {
-        throw new Error(
-            "Invalid Token"
-        );
+        return { error: 'Invalid Token' }
     }
 };
 

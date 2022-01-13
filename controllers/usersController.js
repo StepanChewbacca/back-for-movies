@@ -42,7 +42,7 @@ const login = async (body) => {
         return { result: { data: checkUserRole, accessToken, status: 200 } }
 
     } catch (err) {
-        return { error: err.details[0].message };
+        return { error: err };
     }
 };
 

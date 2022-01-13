@@ -112,9 +112,9 @@ const getMovies = async ({ adult, page, perPage, title, languages,
 }
 
 
-const getMovieById = async (movie_id) => {
+const getMovieById = async ({id}) => {
     try {
-        const movie = await pgClient.query(`SELECT * FROM movies WHERE id = ${movie_id};`);
+        const movie = await pgClient.query(`SELECT * FROM movies WHERE id = ${id};`);
         return { result: await formatMovies(movie.rows) };
 
     } catch (err) {

@@ -19,19 +19,19 @@ const router = async ({ req, res, body }) => {
                 ({ error, result } = await usersController.login(body));
                 break;
              case (req.method === 'POST' && pathname === routes.DATABASE_SET):
-                 ({ error, result } = await setDatabaseController.setDatabase(body));
+                 ({ error, result } = await setDatabaseController.setDatabase(body, query.token));
                  break;
             case (req.method === 'GET' && pathname === routes.MOVIES):
                 ({ error, result } = await moviesController.getMovies(query));
                 break;
             case (req.method === 'GET' && pathname === `${routes.MOVIES}/id`):
-                ({ error, result } = await moviesController.getMovieById(query.id));
+                ({ error, result } = await moviesController.getMovieById(query));
                 break;
             case (req.method === 'GET' && pathname === `${routes.GENRES}`):
-                ({ error, result } = await genresController.getGenres());
+                ({ error, result } = await genresController.getGenres(query));
                 break;
             case (req.method === 'GET' && pathname === `${routes.LANGUAGES}`):
-                ({ error, result } = await moviesController.getLanguages());
+                ({ error, result } = await moviesController.getLanguages(query));
                 break;
             default:
                 res.statusCode = 404;

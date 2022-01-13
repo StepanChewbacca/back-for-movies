@@ -2,13 +2,16 @@ const axios = require('axios');
 const userController = require('../controllers/usersController');
 const genreRepository = require('../database/repositories/genresRepository');
 const moviesRepository = require('../database/repositories/moviesRepository');
+const jwtServices = require('../services/jwtServices');
 
 
-
-const setDatabase = async ({ login, password, api_key }) => {
+const setDatabase = async ({ login, password, api_key }, token) => {
     try {
+        const { error: tokenError } = jwtServices.verifyTokens(token);
+        if (tokenError) return { error: { message: tokenError, statusCode: 401 } };
         const { result } = await userController.login({ login, password })
-        if (result.data !== 'admin') return { error: "User is not admin" };
+        console.log(result)
+        if (!result || result.data !== 'admin') return { error: "User is not admin" };
         await setGenres(api_key)
 
         const { error: dbError } = await setMovies()

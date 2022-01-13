@@ -15,10 +15,12 @@ const createUser = async ({ login, first_name, last_name, user_role }, hashPassw
 const loginUser = async (login) => {
     try {
         const user = await pgClient.query(`SELECT login, password, user_role FROM users WHERE login ='${login}'`);
-        console.log(user.rows);
-        const checkUserRole = user.rows[0].user_role;
-        const checkPassword = user.rows[0].password;
-        return { checkUserRole: checkUserRole, checkPassword: checkPassword  };
+        if (user.rows.length){
+            const checkUserRole = user.rows[0].user_role;
+            const checkPassword = user.rows[0].password;
+            return { checkUserRole: checkUserRole, checkPassword: checkPassword  };
+        }
+        return { error: { message: "Invalid", statusCode: 500 } }
     } catch (err) {
         console.log(err)
         return { error: err };
