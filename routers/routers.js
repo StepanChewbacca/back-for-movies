@@ -30,7 +30,9 @@ const router = async ({ req, res, body }) => {
             case (req.method === 'GET' && pathname === `${routes.GENRES}`):
                 ({ error, result } = await genresController.getGenres());
                 break;
-                
+            case (req.method === 'GET' && pathname === `${routes.LANGUAGES}`):
+                ({ error, result } = await moviesController.getLanguages());
+                break;
             default:
                 res.statusCode = 404;
                 return res.end(JSON.stringify({ message: "route not found" }));

@@ -10,6 +10,7 @@ const setDatabase = async ({ login, password, api_key }) => {
         const { result } = await userController.login({ login, password })
         if (result.data !== 'admin') return { error: "User is not admin" };
         await setGenres(api_key)
+
         const { error: dbError } = await setMovies()
 
         if (dbError) return { error: { status: 500, data: dbError } };

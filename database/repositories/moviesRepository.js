@@ -122,11 +122,22 @@ const getMovieById = async (movie_id) => {
     }
 };
 
+const getLanguages = async () => {
+    try {
+        const languages = await pgClient.query(`SELECT DISTINCT(original_language) FROM movies;`);
+        return { result: await languages.rows };
+
+    } catch (err) {
+        return { error: err };
+    }
+};
+
 module.exports = {
     getIdMovies,
     setMovies,
     getMovies,
-    getMovieById
+    getMovieById,
+    getLanguages
 }
 
 

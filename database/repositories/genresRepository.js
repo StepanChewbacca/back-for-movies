@@ -30,9 +30,7 @@ const setGenres = async ({ id, name }) => {
 const getGenresByMovieId = async (movie_id) => {
     try {
         const genre = await pgClient.query(`SELECT genre_id FROM movies_genres WHERE movie_id = ${movie_id};`);
-        const values = genre.rows.map(e => Object.values(e));
-        const result = values.flat();
-        return  result ;
+        return  genre.rows.flatMap(e => Object.values(e)) ;
     } catch (err) {
         return { error: err };
     }

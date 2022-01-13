@@ -30,4 +30,16 @@ const getMovieById = async (movie_id) => {
     }
 };
 
-module.exports = { getMovies, getMovieById }
+const getLanguages = async () => {
+    try {
+        const { error: dbError, result } = await moviesRepository.getLanguages();
+        if (!result || !result.length ) return { result: { data: 'Not found', status: 404 }};
+        if (dbError) return { error: { status: 500, data: dbError } };
+        return { result: { data: result, status: 200 } };
+    } catch (err) {
+        console.error('getMovieById: ', err);
+        return { error: err, status: 500 };
+    }
+};
+
+module.exports = { getMovies, getMovieById, getLanguages }
