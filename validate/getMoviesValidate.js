@@ -20,7 +20,7 @@ const getMovieValidate = Joi.object({
 });
 
 const getMovieByIdValidate = Joi.object({
-    id: Joi.number().positive().integer().min(1),
+    id: Joi.number().positive().integer().min(1).required(),
     token: Joi.any()
 });
 module.exports = {

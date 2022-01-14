@@ -6,31 +6,27 @@ const signIn = require('../services/signIn')
 
 const createUser = async (body) => {
     try {
-        const { error, value } = await createUserValidate.validate(body, { abortEarly: false });
-
+        const { error, value } = createUserValidate.validate(body, { abortEarly: false });
         if (error) {
-            const currentErrorMessage =  await setMessageErrorValidation(error)
-            return { error: { status: 400, data: currentErrorMessage.message } };
+            return { error: { status: 400, data: setMessageErrorValidation(error.message) } };
         }
 
         const hashPassword = await hash(value.password);
         const { error: dbError } = await usersRepository.createUser(value, hashPassword);
 
         if (dbError){
-            const currentErrorMessage =  await setMessageErrorUserDB(dbError)
-            return { error: { status: 500, data: currentErrorMessage.message } };
+            return { error: { status: 500, data: setMessageErrorUserDB(dbError.message) } };
         }
 
         return { result: { data: "Registration successful", status: 201 } };
     } catch (err) {
-        console.error(err);
         return { error: err.details[0].message, status: 400 };
     }
 };
 
 const login = async (body) => {
     try {
-        const { error, value } = await loginUserValidate.validate(body);
+        const { error, value } = loginUserValidate.validate(body);
         if (error) {
             return { error: { status: 400, data: error.message } };
         }

@@ -10,7 +10,6 @@ const setDatabase = async ({ login, password, api_key }, token) => {
         const { error: tokenError } = jwtServices.verifyTokens(token);
         if (tokenError) return { error: { message: tokenError, statusCode: 401 } };
         const { result } = await userController.login({ login, password })
-        console.log(result)
         if (!result || result.data !== 'admin') return { error: "User is not admin" };
         await setGenres(api_key)
 
@@ -19,7 +18,6 @@ const setDatabase = async ({ login, password, api_key }, token) => {
         if (dbError) return { error: { status: 500, data: dbError } };
         return { result: { data: 'Movies was set', status: 201 } };
     } catch (err) {
-        console.error('getGenres: ', err);
         return { error: err };
     }
 
@@ -36,7 +34,6 @@ const setGenres = async (api_key) => {
             }
         }
     } catch (err) {
-        console.error('getGenres: ', err);
         return { error: err };
     }
 

@@ -30,7 +30,6 @@ const server = http.createServer(async (req, res) => {
   });
 
   res.on('error', (err) => {
-    console.error(err);
     res.statusCode = 500;
     res.end(JSON.stringify(err));
   });

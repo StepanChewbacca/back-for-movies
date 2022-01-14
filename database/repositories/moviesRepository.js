@@ -16,7 +16,6 @@ const getIdMovies = async () => {
         }
         getIdMovies();
     } catch (err) {
-        console.error('getIdMovies: ', err);
         return { error: err };
     }
 };
@@ -47,7 +46,6 @@ const setMovies = async ({ id }) => {
 
         return { data: "Films was inserted" };
     } catch (err) {
-        console.error('setMovies: ', err);
         return { error: err };
     }
 };
@@ -58,7 +56,6 @@ const getGenresId = async (movieId, genresArray) => {
             await setMoviesGenres(movieId, item);
         }
     } catch (err) {
-        console.error('getGenresId: ', err);
         return { error: err };
     }
 };
@@ -68,7 +65,6 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
         await pgClient.query(`INSERT INTO movies_genres(movie_id,genre_id) 
         VALUES(${movieId},${genresId});`);
     } catch (err) {
-        console.error('setMoviesGenres: ', err);
         return { error: err };
     }
 };
@@ -100,13 +96,11 @@ const getMovies = async ({ adult, page, perPage, title, languages,
             options.length = 0;
         }
         pgQuery += `ORDER BY id OFFSET ${(page - 1) * perPage} LIMIT ${perPage};`;
-        console.log(pgQueryCount)
         const movies = await pgClient.query(pgQuery);
         const totalCount = await pgClient.query(pgQueryCount)
         return { result: { data: movies.rows, totalCount : totalCount.rows[0] }};
     }
     catch (err) {
-        //console.error('getMovies repo: ', err);
         return { error: err };
     }
 }
