@@ -11,8 +11,8 @@ const createUserValidate = Joi.object({
 });
 
 const loginUserValidate = Joi.object({
-    password: Joi.string().trim().alphanum().regex(regExp.CHECK_PASSWORD).required(),
-    login: Joi.string().min(6).trim().regex(regExp.CHECK_LOGIN).required(),
+    password: Joi.string().trim().required(),
+    login: Joi.string().trim().required(),
 
 });
 

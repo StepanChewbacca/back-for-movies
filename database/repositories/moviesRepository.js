@@ -2,54 +2,6 @@ const axios = require('axios');
 const pgClient = require('../database');
 const { formatMovies, replaceApostrophe } = require('../../services/formatData')
 
-let page = 1;
-const getIdMovies = async () => {
-
-    try {
-        const { data: { results } } = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=483f32e50b323d6e44691437daeb45e7&page=${page}`);
-        for (const item of results) {
-            setMovies(item);
-        }
-        page++;
-        if (page > 100) {
-            return;
-        }
-        getIdMovies();
-    } catch (err) {
-        return { error: err };
-    }
-};
-
-const setMovies = async ({ id }) => {
-    try {
-
-        let { data: { adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, title, overview, popularity, poster_path, release_date, revenue, runtime, genres, tagline } } = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=483f32e50b323d6e44691437daeb45e7`);
-
-        const idResult = await pgClient.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
-        if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
-        const { data } = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=483f32e50b323d6e44691437daeb45e7`);
-        if (data && data.results.length >0) {
-            const trailer = data.results[0].key;
-            const replacedApostrophe = await replaceApostrophe({ title, original_title, overview, tagline })
-            const result = await pgClient.query(
-                `INSERT INTO movies(adult,
-              backdrop_path, budget, homepage,imdb_id, original_language, original_title,
-              title, overview, popularity, poster_path, release_date, revenue, runtime,
-              tagline, trailer)
-         VALUES(${adult},'${backdrop_path}',${budget},'${homepage}',
-         '${imdb_id}','${original_language}','${replacedApostrophe.original_title}',
-         '${replacedApostrophe.title}','${replacedApostrophe.overview}',${popularity},'${poster_path}',
-         '${release_date}',${revenue},${runtime},'${replacedApostrophe.tagline}','${trailer}') returning*;`);
-
-            await getGenresId(result.rows[0].id, genres);
-        }
-
-        return { data: "Films was inserted" };
-    } catch (err) {
-        return { error: err };
-    }
-};
-
 const getGenresId = async (movieId, genresArray) => {
     try {
         for (const item of genresArray) {
@@ -71,7 +23,7 @@ const setMoviesGenres = async (movieId, { id: genresId }) => {
 
 
 const getMovies = async ({ adult, page, perPage, title, languages,
-    budget_min, budget_max, genre_id, minDate, maxDate, id}) => {
+    budget_min, budget_max, genre_id, minDate, maxDate, id }) => {
     const options = [];
     try {
         let pgQuery = `SELECT * FROM movies `;
@@ -98,7 +50,7 @@ const getMovies = async ({ adult, page, perPage, title, languages,
         pgQuery += `ORDER BY id OFFSET ${(page - 1) * perPage} LIMIT ${perPage};`;
         const movies = await pgClient.query(pgQuery);
         const totalCount = await pgClient.query(pgQueryCount)
-        return { result: { data: movies.rows, totalCount : totalCount.rows[0] }};
+        return { result: { data: movies.rows, totalCount: totalCount.rows[0] } };
     }
     catch (err) {
         return { error: err };
@@ -106,7 +58,7 @@ const getMovies = async ({ adult, page, perPage, title, languages,
 }
 
 
-const getMovieById = async ({id}) => {
+const getMovieById = async ({ id }) => {
     try {
         const movie = await pgClient.query(`SELECT * FROM movies WHERE id = ${id};`);
         return { result: await formatMovies(movie.rows) };
@@ -121,6 +73,55 @@ const getLanguages = async () => {
         const languages = await pgClient.query(`SELECT DISTINCT(original_language) FROM movies;`);
         return { result: await languages.rows };
 
+    } catch (err) {
+        return { error: err };
+    }
+};
+
+
+let page = 1;
+const getIdMovies = async () => {
+
+    try {
+        const { data: { results } } = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=483f32e50b323d6e44691437daeb45e7&page=${page}`);
+        for (const item of results) {
+            setMovies(item);
+        }
+        page++;
+        if (page > 100) {
+            return;
+        }
+        getIdMovies();
+    } catch (err) {
+        return { error: err };
+    }
+};
+
+const setMovies = async ({ id }) => {
+    try {
+
+        let { data: { adult, backdrop_path, budget, homepage, imdb_id, original_language, original_title, title, overview, popularity, poster_path, release_date, revenue, runtime, genres, tagline } } = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=483f32e50b323d6e44691437daeb45e7`);
+
+        const idResult = await pgClient.query(`SELECT imdb_id FROM movies WHERE imdb_id='${imdb_id}';`);
+        if (idResult.rowCount !== 0) return { error: "The movie is exist in dataBase" };
+        const { data } = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=483f32e50b323d6e44691437daeb45e7`);
+        if (data && data.results.length > 0) {
+            const trailer = data.results[0].key;
+            const replacedApostrophe = await replaceApostrophe({ title, original_title, overview, tagline })
+            const result = await pgClient.query(
+                `INSERT INTO movies(adult,
+              backdrop_path, budget, homepage,imdb_id, original_language, original_title,
+              title, overview, popularity, poster_path, release_date, revenue, runtime,
+              tagline, trailer)
+         VALUES(${adult},'${backdrop_path}',${budget},'${homepage}',
+         '${imdb_id}','${original_language}','${replacedApostrophe.original_title}',
+         '${replacedApostrophe.title}','${replacedApostrophe.overview}',${popularity},'${poster_path}',
+         '${release_date}',${revenue},${runtime},'${replacedApostrophe.tagline}','${trailer}') returning*;`);
+
+            await getGenresId(result.rows[0].id, genres);
+        }
+
+        return { data: "Films was inserted" };
     } catch (err) {
         return { error: err };
     }

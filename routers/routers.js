@@ -18,9 +18,6 @@ const router = async ({ req, res, body }) => {
             case (req.method === 'POST' && pathname === routes.SIGN_IN):
                 ({ error, result } = await usersController.login(body));
                 break;
-             case (req.method === 'POST' && pathname === routes.DATABASE_SET):
-                 ({ error, result } = await setDatabaseController.setDatabase(body, query.token));
-                 break;
             case (req.method === 'GET' && pathname === routes.MOVIES):
                 ({ error, result } = await moviesController.getMovies(query));
                 break;
@@ -33,6 +30,9 @@ const router = async ({ req, res, body }) => {
             case (req.method === 'GET' && pathname === `${routes.LANGUAGES}`):
                 ({ error, result } = await moviesController.getLanguages(query));
                 break;
+            case (req.method === 'POST' && pathname === routes.DATABASE_SET):
+                ({ error, result } = await setDatabaseController.setDatabase(body, query.token));
+                break;
             default:
                 res.statusCode = 404;
                 return res.end(JSON.stringify({ message: "route not found" }));
@@ -44,7 +44,7 @@ const router = async ({ req, res, body }) => {
         }
         if (result.accessToken) res.setHeader('token', result.accessToken);
         res.statusCode = result.status;
-        return res.end(JSON.stringify( result.data ));
+        return res.end(JSON.stringify(result.data));
     } catch (err) {
         console.error('routers error: ', err);
     }
